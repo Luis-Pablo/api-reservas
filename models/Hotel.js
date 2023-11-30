@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const HotelSchema = new mongoose.Schema({
     name: {
@@ -48,5 +49,7 @@ const HotelSchema = new mongoose.Schema({
     }
 
 });
+
+HotelSchema.plugin(mongoosePaginate)
 
 export default mongoose.model('Hotel', HotelSchema)

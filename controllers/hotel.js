@@ -40,13 +40,20 @@ export const getHotel = async (req, res, next) => {
 }
 
 export const getHotels = async (req, res, next) => {
-    const {min, max, limit, ...others} = req.query
+    
+    const { min, max, limit, page, ...others } = req.query;
+    const options = {
+        page: page || 1,
+        limit: limit || 10,
+    };
     try {
-        const getHotels = await Hotel.find({
+        const getHotels = await Hotel.paginate({
             ...others,
-            cheapestPrice:{$gte:(min) || 1, $lte:parseInt(max) || 9999999}
-        }).limit(parseInt(req.query.limit))
-        res.status(200).json(getHotels)
+            cheapestPrice: { $gte:parseInt(min) || 1, $lte:parseInt(max) || 9999999}
+        }, options)
+
+        const { docs: results, ...other } = getHotels
+        res.status(200).json({ results: results, info:{...other}})
     } catch (err) {
         next(err)
     }
