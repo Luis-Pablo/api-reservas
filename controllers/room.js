@@ -72,9 +72,15 @@ export const getRoom = async (req, res, next) => {
 }
 
 export const getRooms = async (req, res, next) => {
+    const { limit, page, ...others } = req.query;
+    const options = {
+        page: page || 1,
+        limit: limit || 9999999,
+    };
     try {
-        const getRooms = await Room.find()
-        res.status(200).json(getRooms)
+        const getRooms = await Room.paginate({...others}, options)
+        const { docs: results, ...other } = getRooms
+        res.status(200).json({ results: results, info: { ...other } })
     } catch (err) {
         next(err)
     }

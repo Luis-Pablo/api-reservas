@@ -39,9 +39,15 @@ export const getUser = async (req, res, next) => {
 }
 
 export const getUsers = async (req, res, next) => {
+    const { limit, page, ...others } = req.query;
+    const options = {
+        page: page || 1,
+        limit: limit || 9999999,
+    };
     try {
-        const getUsers = await User.find()
-        res.status(200).json(getUsers)
+        const getUsers = await User.paginate({ ...others }, options)
+        const { docs: results, ...other } = getUsers
+        res.status(200).json({ results: results, info: { ...other } })
     } catch (err) {
         next(err)
     }

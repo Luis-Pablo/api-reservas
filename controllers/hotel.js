@@ -39,12 +39,11 @@ export const getHotel = async (req, res, next) => {
     }
 }
 
-export const getHotels = async (req, res, next) => {
-    
+export const getHotels = async (req, res, next) => {    
     const { min, max, limit, page, ...others } = req.query;
     const options = {
         page: page || 1,
-        limit: limit || 10,
+        limit: limit || 9999999,
     };
     try {
         const getHotels = await Hotel.paginate({
